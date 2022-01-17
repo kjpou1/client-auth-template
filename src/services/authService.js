@@ -1,5 +1,7 @@
-const API_VERSION = process.env.VUE_APP_API_VERSION;
-const API_URL = `${process.env.VUE_APP_API_URL}${API_VERSION}/`;
+import Configuration from '@/helpers/ConfigProvider';
+
+const API_VERSION = Configuration.value('apiVersion');
+const API_URL = `${Configuration.value('apiURL')}${API_VERSION}/`;
 
 // Read #9 in this article: https://auth0.com/blog/ten-things-you-should-know-about-tokens-and-cookies/
 // https://security.stackexchange.com/questions/108662/why-is-bearer-required-before-the-token-in-authorization-header-in-a-http-re
