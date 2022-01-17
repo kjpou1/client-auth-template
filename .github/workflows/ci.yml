@@ -14,7 +14,9 @@ jobs:
     env:
       WORKING_DIRECTORY_CLIENT: ./
       DOCKER_PROJECT_NAME: ${{ github.event.repository.name }}
-      DOCKER_PROJECT_NAME_CLIENT: ${{ github.event.repository.name }}_client
+      # DOCKER_PROJECT_NAME_CLIENT: ${{ github.event.repository.name }}_client
+      # ------------ overriding the name here ------------------- #
+      DOCKER_PROJECT_NAME_CLIENT: CLIENT_AUTH_FRONTENT
     steps:
       - uses: actions/checkout@v2.4.0
 
