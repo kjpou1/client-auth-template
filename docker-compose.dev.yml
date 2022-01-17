@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+
+  client:
+    build:
+      context: ./
+      dockerfile: ./Dockerfile.dev
+    container_name: client-app
+    
+    volumes:
+      - '${PWD}:/app'
+    ports:
+      - "3008:3003"
+    networks:
+      - client
+    env_file:
+      - '.env'
+
+networks:
+  client:
