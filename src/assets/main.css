@@ -1,0 +1,10 @@
+a {
+    transition: all 0.15s ease;
+  }
+
+.introduction-bg {
+    animation: slide 50s linear infinite;
+    will-change: background-position;
+    z-index: -1;
+    background-image: url('https://pronto-core-cdn.prontomarketing.com/2/wp-content/uploads/sites/266/2013/12/banner_bg.jpg');
+  }
