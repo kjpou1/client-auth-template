@@ -1,0 +1,85 @@
+name: CI
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [ubuntu-latest] # [macos-latest, ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    env:
+      WORKING_DIRECTORY_CLIENT: ./
+      DOCKER_PROJECT_NAME: ${{ github.event.repository.name }}
+      DOCKER_PROJECT_NAME_CLIENT: ${{ github.event.repository.name }}_client
+    steps:
+      - uses: actions/checkout@v2.4.0
+
+      # Defone some variables that will be used.
+      - name: Define short sha variable
+        run: echo "SHORT_SHA=`git rev-parse --short HEAD`" >> $GITHUB_ENV
+        
+      # Start of Docker steps
+      
+      # Client build and tagging
+      - name: Build Docker Image CLIENT
+        run: |
+          cd ${{ env.WORKING_DIRECTORY_CLIENT }}
+          docker image build -f Dockerfile.prod -t ${{ env.DOCKER_PROJECT_NAME_CLIENT }} .
+        working-directory: ${{env.working-directory}}
+      - name: Image Tagging
+        run: |
+          docker tag ${{ env.DOCKER_PROJECT_NAME_CLIENT }} ${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.DOCKER_PROJECT_NAME_CLIENT }}:${{ env.SHORT_SHA }}
+          docker tag ${{ env.DOCKER_PROJECT_NAME_CLIENT }} ${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.DOCKER_PROJECT_NAME_CLIENT }}:latest
+
+      # CLIENT end build and tagging
+      
+      # End of Docker build and tagging
+
+      # Start tests          
+      # TODO : Start up test server
+      - name: Run tests          
+        run: |
+          cd ${{ env.WORKING_DIRECTORY_API }}
+        working-directory: ${{env.working-directory}}
+        env:
+          NODE_ENV: test
+      
+      #------------------------------------
+      # main branch deploy
+      #------------------------------------
+      - name: Create a Release
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          cd ${{ env.WORKING_DIRECTORY_API }}
+          echo 'Placeholder for creating a semantic release - Left Blank on Purpose'
+          
+      # Signin to DockerHub
+      - name: Login to DockerHub
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+          
+      # # Deploy to Docker Hub
+      - name: Push to Docker Hub
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.DOCKER_PROJECT_NAME_CLIENT }}:${{ env.SHORT_SHA }}
+          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.DOCKER_PROJECT_NAME_CLIENT }}:latest
+
+      #------------------------------------
+      # develop branch
+      #------------------------------------
+      - name: Deploy to Staging
+        if: github.event_name == 'push' && github.ref == 'refs/heads/develop'
+        run: |
+          cd ${{ env.WORKING_DIRECTORY_API }}
+          echo 'Placeholder for sending to staging - Left Blank on Purpose'
+
+
+
