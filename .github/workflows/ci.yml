@@ -10,6 +10,7 @@ on:
   
 jobs:
   build:
+    concurrency: ci-${{ github.ref }} # Recommended if you intend to make multiple deployments in quick succession.
     strategy:
       matrix:
         os: [ubuntu-latest] # [macos-latest, ubuntu-latest, windows-latest]
