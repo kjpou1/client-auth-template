@@ -27,7 +27,16 @@ jobs:
       # Defone some variables that will be used.
       - name: Define short sha variable
         run: echo "SHORT_SHA=`git rev-parse --short HEAD`" >> $GITHUB_ENV
-        
+
+      # Environment file override
+      - name: Make envfile
+        uses: SpicyPizza/create-envfile@v1
+        with:
+          envkey_VUE_APP_API_VERSION: ${{secrets.VUE_APP_API_VERSION}}
+          envkey_VUE_APP_API_URL: ${{secrets.VUE_APP_API_URL}}
+          directory: './'
+          file_name: '.env.production'
+
       # Install 
       - name: Install build dependencies
         run: yarn install
