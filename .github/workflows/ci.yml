@@ -5,6 +5,9 @@ on:
   push:
     branches: [main]
 
+# Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+  
 jobs:
   build:
     strategy:
@@ -24,6 +27,14 @@ jobs:
       - name: Define short sha variable
         run: echo "SHORT_SHA=`git rev-parse --short HEAD`" >> $GITHUB_ENV
         
+      # Install 
+      - name: Install build dependencies
+        run: yarn install
+
+      # Build it
+      - name: Build it and they will come
+        run: yarn build
+
       # Start of Docker steps
       
       # Client build and tagging
@@ -73,6 +84,12 @@ jobs:
         run: |
           docker push ${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.DOCKER_PROJECT_NAME_CLIENT }}:${{ env.SHORT_SHA }}
           docker push ${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.DOCKER_PROJECT_NAME_CLIENT }}:latest
+
+      - name: Deploy 🚀
+        uses: JamesIves/github-pages-deploy-action@v4.2.2
+        with:
+          branch: gh-pages # The branch the action should deploy to.
+          folder: dist # The folder the action should deploy.        
 
       #------------------------------------
       # develop branch
