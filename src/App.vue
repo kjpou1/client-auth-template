@@ -5,7 +5,6 @@
       <component :is="Component"></component>
     </transition>
   </router-view>
-
   <auth-modal />
   <app-footer />
 </template>
