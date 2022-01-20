@@ -1,7 +1,15 @@
 import Configuration from '@/helpers/ConfigProvider';
+import { combineURLs } from '@/helpers';
 
 const API_VERSION = Configuration.value('apiVersion');
-const API_URL = `${Configuration.value('apiURL')}${API_VERSION}/`;
+const API_ENDPOINT = combineURLs(Configuration.value('apiURL'), API_VERSION);
+const LOGIN_ENDPOINT = combineURLs(API_ENDPOINT, 'login');
+const LOGOUT_ENDPOINT = combineURLs(API_ENDPOINT, 'logout');
+const REGISTER_ENDPOINT = combineURLs(API_ENDPOINT, 'register');
+const REQUEST_RESET_ENDPOINT = combineURLs(API_ENDPOINT, 'request_reset');
+const RESET_ENDPOINT = combineURLs(API_ENDPOINT, 'reset');
+const TOKEN_ENDPOINT = combineURLs(API_ENDPOINT, 'token');
+const REFRESH_ENDPOINT = combineURLs(API_ENDPOINT, 'token');
 
 // Read #9 in this article: https://auth0.com/blog/ten-things-you-should-know-about-tokens-and-cookies/
 // https://security.stackexchange.com/questions/108662/why-is-bearer-required-before-the-token-in-authorization-header-in-a-http-re
@@ -37,7 +45,7 @@ class AuthService {
   }
 
   static async signIn(user) {
-    const response = await fetch(`${API_URL}login`, {
+    const response = await fetch(LOGIN_ENDPOINT, {
       method: 'POST',
       credentials: 'include',
       body: JSON.stringify({
@@ -55,7 +63,7 @@ class AuthService {
   }
 
   static async register(user) {
-    const response = await fetch(`${API_URL}register`, {
+    const response = await fetch(REGISTER_ENDPOINT, {
       method: 'POST',
       credentials: 'include',
       body: JSON.stringify({
@@ -81,7 +89,7 @@ class AuthService {
   }
 
   static async signout() {
-    const response = await fetch(`${API_URL}logout`, {
+    const response = await fetch(LOGOUT_ENDPOINT, {
       method: 'POST',
       credentials: 'include',
       body: '{}',
@@ -95,7 +103,7 @@ class AuthService {
   }
 
   static async forgot(payload) {
-    const response = await fetch(`${API_URL}request_reset`, {
+    const response = await fetch(REQUEST_RESET_ENDPOINT, {
       method: 'POST',
       credentials: 'include',
       body: JSON.stringify({
@@ -113,7 +121,7 @@ class AuthService {
   static async resetPassword(payload) {
     const { requestId } = payload?.params;
     console.log(payload);
-    const response = await fetch(`${API_URL}reset/${requestId}`, {
+    const response = await fetch(combineURLs(RESET_ENDPOINT, requestId), {
       method: 'POST',
       credentials: 'include',
       body: JSON.stringify({
@@ -131,7 +139,7 @@ class AuthService {
   static async getAuthToken() {
     const currentTokenId = window.sessionStorage.getItem('tokenId');
     if (currentTokenId) {
-      const response = await fetch(`${API_URL}token/${currentTokenId}`, {
+      const response = await fetch(combineURLs(TOKEN_ENDPOINT, currentTokenId), {
         method: 'GET',
         credentials: 'include',
         headers: {
@@ -159,7 +167,7 @@ class AuthService {
   }
 
   static async refreshToken() {
-    const refreshTokenResponse = await fetch(`${API_URL}token`, {
+    const refreshTokenResponse = await fetch(REFRESH_ENDPOINT, {
       method: 'POST',
       credentials: 'include',
       body: '{}',
