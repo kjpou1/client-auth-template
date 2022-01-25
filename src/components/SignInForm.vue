@@ -29,7 +29,7 @@
             <input id="rememberme" name="rememberme" class="w-3 h-3 mr-2 bg-white dark:bg-gray-800" type="checkbox" />
             <label for="rememberme" class="text-xs dark:text-gray-100">Remember Me</label>
         </div>
-        <a class="text-xs text-indigo-600" href="forgot">Forgot Password?</a>
+        <a class="text-xs text-indigo-600" @click.prevent="forgot" href="#">Forgot Password?</a>
     </div>
 
     <button type="submit" :disabled="this.isSigningIn"
@@ -41,7 +41,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters, mapMutations } from 'vuex';
 
 export default {
   name: 'SignInForm',
@@ -67,6 +67,7 @@ export default {
     ]),
   },
   methods: {
+    ...mapMutations(['toggleAuthModal']),
     async signIn(values) {
       try {
         await this.$store.dispatch('signIn', values);
@@ -74,10 +75,10 @@ export default {
         this.signin_alert_variant = 'bg-red-500';
         this.signin_alert_msg = 'An unexpected error occured.  Please try again later.';
       }
-      //
     },
     forgot() {
-      this.$router.push('./forgot');
+      this.toggleAuthModal();
+      this.$router.push({ name: 'forgot' });
     },
 
   },
