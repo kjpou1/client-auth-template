@@ -58,7 +58,7 @@ export default {
   methods: {
     async forgot(values) {
       try {
-        await this.$store.dispatch('forgot', { values, resetURL: `${window.location.href}/reset_password` });
+        await this.$store.dispatch('forgot', { values, resetURL: `${window.location.origin}/${process.env.BASE_URL}/reset_password` });
       } catch (error) {
         this.forgot_submission = false;
         this.forgot_alert_variant = 'bg-red-500';
