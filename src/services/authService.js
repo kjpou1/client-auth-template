@@ -109,6 +109,7 @@ class AuthService {
       body: JSON.stringify({
         email: payload.values?.email,
         resetURL: payload.resetURL,
+        sendEmail: true,
       }),
       headers: {
         'Content-Type': 'application/json',
