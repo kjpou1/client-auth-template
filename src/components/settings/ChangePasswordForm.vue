@@ -154,11 +154,15 @@ export default {
     },
     isChgPwdError() {
       if (this.getChgPwdErrorMessage) {
-        const msgDetails = JSON.parse(this.getChgPwdErrorMessage);
-        if (msgDetails?.field) {
-          if (msgDetails.field === 'passwordCurrent') {
-            this.pwd_alert_msg = msgDetails.errorMessage;
+        try {
+          const msgDetails = JSON.parse(this.getChgPwdErrorMessage);
+          if (msgDetails?.field) {
+            if (msgDetails.field === 'passwordCurrent') {
+              this.pwd_alert_msg = msgDetails.errorMessage;
+            }
           }
+        } catch {
+          this.pwd_alert_msg = this.getChgPwdErrorMessage;
         }
       }
       // this.pwd_alert_msg = this.getChgPwdErrorMessage;
