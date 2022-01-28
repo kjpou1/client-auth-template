@@ -30,7 +30,7 @@
         </div>
 
         <div class="mx-auto flex justify-center md:items-center relative md:h-full">
-          <!-- Reset Form -->
+          <!-- Change Password Form -->
           <vee-form id="chgPWD" :validation-schema="schema"
             @submit="chgPWD"
             class="w-full sm:w-4/6 md:w-4/6 lg:w-8/12 xl:w-8/12 text-gray-800">
@@ -99,7 +99,7 @@ export default {
       },
       pwd_show_alert: false,
       pwd_alert_variant: 'bg-blue-500',
-      pwd_alert_msg: 'Please wait! We are processing your reset request.',
+      pwd_alert_msg: 'Please wait! We are processing your change request.',
     };
   },
   methods: {
@@ -128,7 +128,7 @@ export default {
       // Show message
       if (this.isChangingPassword) {
         this.pwd_show_alert = true;
-        this.pwd_alert_msg = 'Please wait! We are processing the reset request.';
+        this.pwd_alert_msg = 'Please wait! We are processing the change request.';
       }
 
       // set the colors
@@ -137,7 +137,7 @@ export default {
       } else if (this.isChangingPassword) { this.pwd_alert_variant = 'bg-green-500'; } else { this.pwd_alert_variant = 'bg-blue-500'; }
     },
     isPasswordChanged() {
-      this.pwd_alert_msg = 'Success! Passwords have been reset.  Please Sign In using your new credentials.';
+      this.pwd_alert_msg = 'Success! Passwords have been updated.  Please Sign In using your new credentials.';
       try {
         this.$store.dispatch('signout', {
           router: this.$router,
