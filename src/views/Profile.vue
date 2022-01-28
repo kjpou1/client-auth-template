@@ -6,7 +6,7 @@
 
 <script>
 // @ is an alias to /src
-import AppProfileForm from '@/components/ManageProfileForm.vue';
+import AppProfileForm from '@/components/settings/ManageProfileForm.vue';
 
 export default {
   name: 'Profile',

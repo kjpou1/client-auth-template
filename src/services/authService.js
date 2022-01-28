@@ -10,6 +10,7 @@ const REQUEST_RESET_ENDPOINT = combineURLs(API_ENDPOINT, 'request_reset');
 const RESET_ENDPOINT = combineURLs(API_ENDPOINT, 'reset');
 const TOKEN_ENDPOINT = combineURLs(API_ENDPOINT, 'token');
 const REFRESH_ENDPOINT = combineURLs(API_ENDPOINT, 'token');
+const CHANGE_PASSWORD_ENDPOINT = combineURLs(API_ENDPOINT, 'me/change_password');
 
 // Read #9 in this article: https://auth0.com/blog/ten-things-you-should-know-about-tokens-and-cookies/
 // https://security.stackexchange.com/questions/108662/why-is-bearer-required-before-the-token-in-authorization-header-in-a-http-re
@@ -180,6 +181,23 @@ class AuthService {
     const refreshTokenRequestInfo = await refreshTokenResponse.json();
     this.setTokenInformation(refreshTokenRequestInfo);
     return null;
+  }
+
+  static async changePassword(payload) {
+    const response = await fetch(CHANGE_PASSWORD_ENDPOINT, {
+      method: 'PATCH',
+      credentials: 'include',
+      body: JSON.stringify({
+        passwordCurrent: payload.values?.current_password,
+        passwordNew: payload?.values?.password,
+        passwordConfirm: payload?.values?.confirm_password,
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `${this.tokenType} ${this.accessToken}`,
+      },
+    });
+    return response.json();
   }
 }
 

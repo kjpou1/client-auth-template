@@ -27,14 +27,14 @@ export default {
     configure({
       generateMessage: (ctx) => {
         const messages = {
-          required: `The field ${ctx.field} is required.`,
-          min: `The field ${ctx.field} is too short.`,
-          max: `The field ${ctx.field} is too long.`,
-          alpha_spaces: `The field ${ctx.field} may only contain alphabetical characters and spaces.`,
-          email: `The field ${ctx.field} must be a valid email.`,
-          min_value: `The field ${ctx.field} is too low.`,
-          max_value: `The field ${ctx.field} is too high.`,
-          excluded: `You are not allowed to use this value for the field ${ctx.field}.`,
+          required: `The field ${this.messageFieldHelper(ctx)} is required.`,
+          min: `The field ${this.messageFieldHelper(ctx)} is too short.`,
+          max: `The field ${this.messageFieldHelper(ctx)} is too long.`,
+          alpha_spaces: `The field ${this.messageFieldHelper(ctx)} may only contain alphabetical characters and spaces.`,
+          email: `The field ${this.messageFieldHelper(ctx)} must be a valid email.`,
+          min_value: `The field ${this.messageFieldHelper(ctx)} is too low.`,
+          max_value: `The field ${this.messageFieldHelper(ctx)} is too high.`,
+          excluded: `You are not allowed to use this value for the field ${this.messageFieldHelper(ctx)}.`,
           country_excluded: 'Due to restrictions, we do not accept users from this location.',
           passwords_mismatch: "The passwords don't match.",
           tos: 'You must accept the Terms of Service.',
@@ -42,7 +42,7 @@ export default {
 
         const message = messages[ctx.rule.name]
           ? messages[ctx.rule.name]
-          : `The field ${ctx.field} is invalid.`;
+          : `The field ${this.messageFieldHelper(ctx)} is invalid.`;
 
         return message;
       },
@@ -51,5 +51,13 @@ export default {
       validateOnInput: false,
       validateOnModelUpdate: true,
     });
+  },
+  messageFieldHelper(ctx) {
+    switch (ctx.field) {
+      case 'current_password':
+        return 'Current Password';
+      default:
+        return ctx.field;
+    }
   },
 };

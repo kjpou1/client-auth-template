@@ -24,6 +24,11 @@ export default createStore({
     resetError: false,
     resetErrorMessage: null,
 
+    passwordChanged: false,
+    changingPassword: false,
+    chgPwdError: false,
+    chgPwdErrorMessage: null,
+
   },
   mutations: {
     toggleAuthModal: (state) => {
@@ -76,6 +81,16 @@ export default createStore({
       state.resetErrorMessage = payload;
       state.resetError = payload !== null;
     },
+    togglePasswordChanged(state) {
+      state.passwordChanged = !state.passwordChanged;
+    },
+    toggleChangingPassword(state) {
+      state.changingPassword = !state.changingPassword;
+    },
+    setChgPwdError: (state, payload) => {
+      state.chgPwdErrorMessage = payload;
+      state.chgPwdError = payload !== null;
+    },
 
   },
   getters: {
@@ -99,6 +114,12 @@ export default createStore({
     isReset: (state) => state.resetPassword,
     isResetting: (state) => state.resetting,
     getResetErrorMessage: (state) => state.resetErrorMessage,
+
+    isChgPwdError: (state) => state.chgPwdError,
+    isPasswordChanged: (state) => state.passwordChanged,
+    isChangingPassword: (state) => state.changingPassword,
+    getChgPwdErrorMessage: (state) => state.chgPwdErrorMessage,
+
   },
   actions: {
     async init_login({ commit }) {
@@ -189,6 +210,20 @@ export default createStore({
     // Could be to just go to home page
     resetPasswordRedirect() {
       // window.location.reload();
+    },
+
+    async changePassword({ commit }, payload) {
+      commit('setChgPwdError', null);
+      commit('toggleChangingPassword');
+
+      // Call service function to process the reset request
+      const chgPwdResponse = await AuthService.changePassword(payload);
+      if (chgPwdResponse?.status === 200) {
+        commit('togglePasswordChanged');
+      } else {
+        commit('setChgPwdError', chgPwdResponse?.message ?? 'Unknown error.');
+      }
+      commit('toggleChangingPassword');
     },
 
   },

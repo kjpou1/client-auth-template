@@ -29,30 +29,25 @@
             <!-- Primary Navigation -->
             <ul class="flex md:flex text-3xl md:text-base lg:text-base lg:flex flex-col md:flex-row lg:flex-row justify-center items-center fixed md:relative lg:relative top-0 bottom-0 left-0 right-0 bg-dark-olive z-20 xl:mr-32">
               <!-- Navigation Links -->
-                <li class="md:mr-8 lg:mr-10 flex items-center" v-if="userSignedIn">
-                  <router-link class="px-2 text-white" :to="{ name: 'profile' }">
-                    Profile
-                  </router-link>
-                </li>
+              <menu-profile></menu-profile>
+
               <li class="md:mr-8 lg:mr-10 flex items-center">
                 <router-link class="px-2 text-white" :to="{ name: 'about' }">
                   About
                 </router-link>
               </li>
+
               <li class="md:mr-8 lg:mr-10 flex items-center" v-if="!userSignedIn">
                 <button
                 class="focus:outline-none mt-10 md:mt-0 bg-white transition duration-150 ease-in-out hover:bg-gray-200 rounded border border-indigo-600 text-indigo-600 px-6 py-3 text-sm"
-                @click.prevent="toggleAuthModal">Sign In / Register</button>
+                @click.prevent="toggleAuthModal" >Sign In / Register</button>
               </li>
-              <template v-else>
-                <li class="md:mr-8 lg:mr-10 flex items-center">
-                                  <button
-                class="focus:outline-none mt-10 md:mt-0 bg-white transition duration-150 ease-in-out hover:bg-gray-200 rounded border border-indigo-600 text-indigo-600 px-6 py-3 text-sm"
-                @click.prevent="signout">Sign Out</button>
 
-                  <!-- <a class="px-2 text-white" href="#"
-                    @click.prevent="signout">Logout</a> -->
-                </li>
+              <template v-else>
+
+                <!-- <button-signout></button-signout> -->
+                <avatar-dropdown></avatar-dropdown>
+
               </template>
             </ul>
           </div>
@@ -63,25 +58,26 @@
 
 <script>
 import { mapMutations, mapState } from 'vuex';
+import MenuProfile from './navigation/MenuProfile.vue';
+// import ButtonSignout from './navigation/ButtonSignout.vue';
+import AvatarDropdown from './navigation/AvatarDropdown.vue';
 
 export default {
   name: 'Header',
+  components: {
+    MenuProfile,
+    // ButtonSignout,
+    AvatarDropdown,
+  },
+  data() {
+    return {
+    };
+  },
   computed: {
     ...mapState(['userSignedIn']),
   },
   methods: {
     ...mapMutations(['toggleAuthModal']),
-    signout() {
-      this.$store.dispatch('signout', {
-        router: this.$router,
-        route: this.$route,
-      });
-
-      // console.log(this.$route);
-      // if (this.$route.meta.requiresAuth) {
-      this.$router.push({ name: 'home' });
-      // }
-    },
   },
 };
 </script>
